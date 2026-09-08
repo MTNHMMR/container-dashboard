@@ -21,11 +21,12 @@ function renderHost(host) {
   cards.append(
     card("Containers", `${host.containersRunning} up`, `${host.containersStopped} stopped`),
     card("CPU", fmtPct(host.totalCpuPct), `${host.arch} · ${host.containersRunning} running`),
-    card("Memory", fmtBytes(host.totalMemUsedBytes), `of ${fmtBytes(host.memLimitBytes)}`),
+    card("Memory", fmtBytes(host.totalMemUsedBytes), `across ${host.containersRunning} running`),
     card("Docker disk", fmtBytes(host.diskUsedBytes), "images + containers + volumes"),
     card("Engine uptime", fmtDuration(host.engineUptimeSecs), `Docker ${host.dockerVersion}`),
   );
-  $("host-sub").textContent = `${host.os} · ${host.arch} · storage: ${host.storageDriver}`;
+  $("host-sub").textContent =
+    `${host.os} · ${host.arch} · ${fmtBytes(host.memLimitBytes)} RAM · storage: ${host.storageDriver}`;
 }
 
 function renderRows(containers) {

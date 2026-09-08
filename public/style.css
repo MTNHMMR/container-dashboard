@@ -89,7 +89,26 @@ td.image span {
   vertical-align: bottom;
 }
 
-td.endpoints a { color: var(--accent); text-decoration: none; margin-right: 10px; }
-td.endpoints a:hover { text-decoration: underline; }
+td.endpoints .chip {
+  display: inline-block;
+  padding: 1px 7px;
+  margin: 0 4px 2px 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--accent);
+  text-decoration: none;
+}
+td.endpoints a.chip:hover { border-color: var(--accent); }
+td.endpoints span.chip { color: var(--dim); }
+
+tr.row-bad td {
+  box-shadow: inset 3px 0 0 var(--bad);
+  background: color-mix(in srgb, var(--bad) 8%, transparent);
+}
+tr.row-warn td {
+  box-shadow: inset 3px 0 0 var(--warn);
+  background: color-mix(in srgb, var(--warn) 7%, transparent);
+}
 
 .foot { color: var(--dim); font-size: 12px; margin-top: 20px; }
