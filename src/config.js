@@ -6,9 +6,18 @@ function parsePositiveInt(value, name) {
   return n;
 }
 
+// PORT also accepts 0, which asks the OS for an ephemeral port (used by integration tests).
+function parsePort(value) {
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < 0) {
+    throw new Error(`Invalid PORT: expected a non-negative integer, got ${JSON.stringify(value)}`);
+  }
+  return n;
+}
+
 export function loadConfig(env = process.env) {
   return {
-    port: env.PORT === undefined ? 9000 : parsePositiveInt(env.PORT, "PORT"),
+    port: env.PORT === undefined ? 9000 : parsePort(env.PORT),
     dashboardHost: env.DASHBOARD_HOST || "localhost",
     pollIntervalMs:
       env.POLL_INTERVAL_MS === undefined
