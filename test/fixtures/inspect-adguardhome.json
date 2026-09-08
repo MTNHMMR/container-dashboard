@@ -1,0 +1,11 @@
+{
+  "Id": "bbbb222222222222222222222222222222222222222222222222222222222222",
+  "Name": "/adguardhome",
+  "RestartCount": 0,
+  "State": {
+    "Status": "running",
+    "StartedAt": "2026-09-08T12:22:00.000000000Z",
+    "Health": { "Status": "starting" }
+  },
+  "Config": { "Image": "adguard/adguardhome" }
+}

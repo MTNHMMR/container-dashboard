@@ -1,0 +1,12 @@
+{
+  "ServerVersion": "27.1.1",
+  "OperatingSystem": "Docker Desktop",
+  "Architecture": "x86_64",
+  "Containers": 5,
+  "ContainersRunning": 3,
+  "ContainersStopped": 2,
+  "Images": 12,
+  "Driver": "overlay2",
+  "NCPU": 4,
+  "MemTotal": 8203526144
+}

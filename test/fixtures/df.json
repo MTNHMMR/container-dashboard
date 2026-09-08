@@ -1,0 +1,7 @@
+{
+  "LayersSize": 1680000000,
+  "Images": [{ "Size": 1680000000, "SharedSize": 400000000 }],
+  "Containers": [{ "SizeRw": 22000000 }, { "SizeRw": 15000000 }, { "SizeRw": 0 }],
+  "Volumes": [{ "UsageData": { "Size": 90000000 } }],
+  "BuildCache": [{ "Size": 5000000 }]
+}

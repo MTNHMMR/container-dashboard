@@ -1,0 +1,11 @@
+{
+  "Id": "aaaa111111111111111111111111111111111111111111111111111111111111",
+  "Name": "/wall-display",
+  "RestartCount": 0,
+  "State": {
+    "Status": "running",
+    "StartedAt": "2026-09-08T12:23:04.000000000Z",
+    "Health": { "Status": "healthy" }
+  },
+  "Config": { "Image": "wall-display:latest" }
+}

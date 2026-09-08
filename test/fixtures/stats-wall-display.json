@@ -1,0 +1,13 @@
+{
+  "cpu_stats": {
+    "cpu_usage": { "total_usage": 220000000, "percpu_usage": [1, 1, 1, 1] },
+    "system_cpu_usage": 8000000000,
+    "online_cpus": 4
+  },
+  "precpu_stats": {
+    "cpu_usage": { "total_usage": 200000000 },
+    "system_cpu_usage": 7900000000,
+    "online_cpus": 4
+  },
+  "memory_stats": { "usage": 120000000, "limit": 8203526144, "stats": { "cache": 20000000 } }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "Id": "aaaa111111111111111111111111111111111111111111111111111111111111",
+    "Names": ["/wall-display"],
+    "Image": "wall-display:latest",
+    "State": "running",
+    "Status": "Up 11 minutes (healthy)",
+    "Created": 1757310000,
+    "Ports": [
+      { "IP": "0.0.0.0", "PrivatePort": 8080, "PublicPort": 8080, "Type": "tcp" },
+      { "IP": "::", "PrivatePort": 8080, "PublicPort": 8080, "Type": "tcp" }
+    ]
+  },
+  {
+    "Id": "bbbb222222222222222222222222222222222222222222222222222222222222",
+    "Names": ["/adguardhome"],
+    "Image": "adguard/adguardhome",
+    "State": "running",
+    "Status": "Up 11 minutes",
+    "Created": 1757309000,
+    "Ports": [
+      { "IP": "0.0.0.0", "PrivatePort": 53, "PublicPort": 53, "Type": "tcp" },
+      { "IP": "0.0.0.0", "PrivatePort": 53, "PublicPort": 53, "Type": "udp" },
+      { "IP": "0.0.0.0", "PrivatePort": 3000, "PublicPort": 3000, "Type": "tcp" },
+      { "IP": "0.0.0.0", "PrivatePort": 853, "PublicPort": 853, "Type": "tcp" }
+    ]
+  },
+  {
+    "Id": "cccc333333333333333333333333333333333333333333333333333333333333",
+    "Names": ["/portainer"],
+    "Image": "portainer/portainer-ce:latest",
+    "State": "running",
+    "Status": "Up 11 minutes",
+    "Created": 1757308000,
+    "Ports": [
+      { "IP": "0.0.0.0", "PrivatePort": 9443, "PublicPort": 9443, "Type": "tcp" },
+      { "IP": "0.0.0.0", "PrivatePort": 8000, "PublicPort": 8000, "Type": "tcp" },
+      { "PrivatePort": 9000, "Type": "tcp" }
+    ]
+  },
+  {
+    "Id": "dddd444444444444444444444444444444444444444444444444444444444444",
+    "Names": ["/ollama"],
+    "Image": "ollama/ollama",
+    "State": "exited",
+    "Status": "Exited (255) 15 hours ago",
+    "Created": 1757200000,
+    "Ports": []
+  }
+]

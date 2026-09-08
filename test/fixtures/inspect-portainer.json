@@ -1,0 +1,10 @@
+{
+  "Id": "cccc333333333333333333333333333333333333333333333333333333333333",
+  "Name": "/portainer",
+  "RestartCount": 2,
+  "State": {
+    "Status": "running",
+    "StartedAt": "2026-09-08T12:20:00.000000000Z"
+  },
+  "Config": { "Image": "portainer/portainer-ce:latest" }
+}
