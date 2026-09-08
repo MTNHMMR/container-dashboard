@@ -1241,21 +1241,10 @@ test("GET /api/health is ok regardless of Docker", async () => {
   }
 });
 
-test("GET / serves the dashboard HTML", async () => {
-  const { server, base } = await start({ getSnapshot: () => ({}) });
-  try {
-    const res = await fetch(`${base}/`);
-    assert.equal(res.status, 200);
-    assert.match(res.headers.get("content-type"), /text\/html/);
-    const html = await res.text();
-    assert.match(html, /Container Dashboard/i);
-  } finally {
-    server.close();
-  }
-});
+// Note: the "GET / serves the dashboard HTML" test lives in Task 6, because it
+// depends on public/index.html, which Task 6 creates. Keep server.test.js to the
+// two API assertions here so this task commits with a fully-passing suite.
 ```
-
-> `GET /` depends on `public/index.html` existing. It is created in Task 6. If executing strictly in order, this third assertion will fail until Task 6 — that is expected; run this test again at the end of Task 6. The first two assertions pass now.
 
 - [ ] **Step 2: Run the test to verify it fails**
 
@@ -1285,12 +1274,17 @@ export function createApp({ poller, publicDir }) {
 }
 ```
 
-- [ ] **Step 4: Run the test**
+- [ ] **Step 4: Run the test to verify it passes**
 
 Run: `node --test test/server.test.js`
-Expected: first two tests PASS; the `GET /` test FAILS with a 404 until Task 6 adds `public/index.html`. Note it and continue.
+Expected: PASS — 2 tests (`/api/status`, `/api/health`).
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Run the whole suite**
+
+Run: `npm test`
+Expected: PASS — config, docker-client (or skipped), collector, poller, server.
+
+- [ ] **Step 6: Commit**
 
 ```bash
 git add src/server.js test/server.test.js
@@ -1643,20 +1637,39 @@ tick();
 setInterval(tick, REFRESH_MS);
 ```
 
-- [ ] **Step 8: Re-run the server test now that `public/` exists**
+- [ ] **Step 8: Add the HTML-serving test to `test/server.test.js`**
+
+Append this test (the `start` helper and imports already exist in the file from Task 5):
+
+```js
+test("GET / serves the dashboard HTML", async () => {
+  const { server, base } = await start({ getSnapshot: () => ({}) });
+  try {
+    const res = await fetch(`${base}/`);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-type"), /text\/html/);
+    const html = await res.text();
+    assert.match(html, /Container Dashboard/i);
+  } finally {
+    server.close();
+  }
+});
+```
+
+- [ ] **Step 9: Run the server test now that `public/` exists**
 
 Run: `node --test test/server.test.js`
-Expected: PASS — all 3 tests (the `GET /` test now finds `index.html`).
+Expected: PASS — 3 tests (the `GET /` test now finds `index.html`).
 
-- [ ] **Step 9: Run the whole suite**
+- [ ] **Step 10: Run the whole suite**
 
 Run: `npm test`
 Expected: PASS — config, docker-client (or skipped), collector, poller, server, format.
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 11: Commit**
 
 ```bash
-git add public test/format.test.js
+git add public test/format.test.js test/server.test.js
 git commit -m "feat: dark dashboard page with 30s polling and stale/down states"
 ```
 
