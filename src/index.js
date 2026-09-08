@@ -24,7 +24,12 @@ export async function startServer({ env = process.env } = {}) {
 
   async function close() {
     poller.stop();
-    await new Promise((resolve) => server.close(resolve));
+    await new Promise((resolve) => {
+      server.close(resolve);
+      // Keep-alive clients (e.g. a browser polling /api/status) would otherwise
+      // hold the connection open and prevent server.close() from ever resolving.
+      server.closeAllConnections();
+    });
   }
 
   return { server, poller, close };

@@ -62,6 +62,24 @@ test("getJson rejects on a non-2xx response", async (t) => {
   assert.match(result.message, /500/);
 });
 
+test("getJson rejects with a timeout error when the daemon accepts but never responds", async (t) => {
+  const result = await withFakeDaemon(
+    () => { /* accept the request, never write a response */ },
+    async (socketPath) => {
+      const client = createDockerClient({ socketPath, timeoutMs: 150 });
+      const started = Date.now();
+      return client.getJson("/info").then(
+        () => ({ threw: false }),
+        (err) => ({ threw: true, message: err.message, elapsed: Date.now() - started })
+      );
+    }
+  );
+  if (result?.skipped) return t.skip(result.reason);
+  assert.equal(result.threw, true);
+  assert.match(result.message, /timed out/);
+  assert.ok(result.elapsed < 5000, `expected a bounded wait, got ${result.elapsed}ms`);
+});
+
 test("listContainers requests all containers", async (t) => {
   const result = await withFakeDaemon(
     (req, res) => {

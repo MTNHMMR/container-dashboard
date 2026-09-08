@@ -59,6 +59,51 @@ test("a later failure keeps the last good snapshot but sets lastError", async ()
   poller.stop();
 });
 
+test("overlapping ticks don't stack: a slow in-flight tick blocks a concurrent one", async () => {
+  let calls = 0;
+  const gates = [];
+  const poller = createPoller({
+    collectFn: () => {
+      calls += 1;
+      return new Promise((resolve) => gates.push(resolve));
+    },
+    intervalMs: 10_000,
+    logger: silent,
+  });
+
+  const p1 = poller._tickOnceForTest(); // collect #1 starts, stays pending
+  assert.equal(calls, 1);
+
+  const p2 = poller._tickOnceForTest(); // interval "fires again" while #1 in flight
+  await p2;
+  assert.equal(calls, 1, "the concurrent tick must not start a second collect");
+
+  gates[0](okSnap(1)); // let the slow first collect finish
+  await p1;
+  assert.equal(poller.getSnapshot().lastUpdated, "t1");
+
+  const p3 = poller._tickOnceForTest(); // a fresh, non-overlapping tick runs normally
+  assert.equal(calls, 2);
+  gates[1](okSnap(2));
+  await p3;
+  assert.equal(poller.getSnapshot().lastUpdated, "t2", "the newer result wins, not clobbered by the stale one");
+
+  poller.stop();
+});
+
+test("start() twice without stop() does not leak a second interval", async () => {
+  let calls = 0;
+  const poller = createPoller({
+    collectFn: async () => okSnap(++calls),
+    intervalMs: 10_000,
+    logger: silent,
+  });
+  await poller.start();
+  await poller.start(); // second call hits the `if (timer) return` guard
+  assert.equal(calls, 1, "the second start() is a no-op and does not stack another interval");
+  poller.stop();
+});
+
 test("recovery clears lastError", async () => {
   let mode = "boom";
   const poller = createPoller({

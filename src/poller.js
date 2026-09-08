@@ -2,8 +2,11 @@ export function createPoller({ collectFn, intervalMs, logger = console }) {
   let current = null; // last good Snapshot
   let lastError = null;
   let timer = null;
+  let running = false; // in-flight guard: prevents overlapping ticks stacking
 
   async function tick() {
+    if (running) return;
+    running = true;
     try {
       const snap = await collectFn();
       current = snap;
@@ -11,11 +14,14 @@ export function createPoller({ collectFn, intervalMs, logger = console }) {
     } catch (err) {
       lastError = err && err.message ? err.message : String(err);
       logger.error(`[poller] collection failed: ${lastError}`);
+    } finally {
+      running = false;
     }
   }
 
   return {
     async start() {
+      if (timer) return;
       await tick();
       timer = setInterval(tick, intervalMs);
       if (typeof timer.unref === "function") timer.unref();

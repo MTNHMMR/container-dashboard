@@ -15,6 +15,23 @@ test("startServer boots on an ephemeral port and serves /api/health", async () =
   }
 });
 
+test("close() resolves promptly even with an open keep-alive client connection", async () => {
+  const { server, close } = await startServer({
+    env: { PORT: "0", DOCKER_SOCKET: "/nonexistent/docker.sock", POLL_INTERVAL_MS: "60000" },
+  });
+  const { port } = server.address();
+
+  // Open a request and deliberately do NOT await it, leaving a live connection.
+  const pending = fetch(`http://127.0.0.1:${port}/api/status`).catch(() => {});
+
+  const started = Date.now();
+  await close();
+  const elapsed = Date.now() - started;
+  assert.ok(elapsed < 1000, `close() should drain fast, took ${elapsed}ms`);
+
+  await pending;
+});
+
 test("with Docker unreachable, /api/status reports down rather than crashing", async () => {
   const { server, close } = await startServer({
     env: { PORT: "0", DOCKER_SOCKET: "/nonexistent/docker.sock", POLL_INTERVAL_MS: "60000" },

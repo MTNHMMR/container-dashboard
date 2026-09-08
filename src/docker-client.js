@@ -1,9 +1,9 @@
 import http from "node:http";
 
-function getJson(socketPath, apiPath) {
+function getJson(socketPath, apiPath, timeoutMs) {
   return new Promise((resolve, reject) => {
     const req = http.request(
-      { socketPath, path: apiPath, method: "GET", headers: { Host: "docker" } },
+      { socketPath, path: apiPath, method: "GET", headers: { Host: "docker" }, timeout: timeoutMs },
       (res) => {
         const chunks = [];
         res.on("data", (c) => chunks.push(c));
@@ -21,13 +21,14 @@ function getJson(socketPath, apiPath) {
         });
       }
     );
+    req.on("timeout", () => req.destroy(new Error(`Docker API ${apiPath} -> timed out after ${timeoutMs}ms`)));
     req.on("error", (err) => reject(new Error(`Docker API ${apiPath} -> ${err.message}`)));
     req.end();
   });
 }
 
-export function createDockerClient({ socketPath }) {
-  const call = (p) => getJson(socketPath, p);
+export function createDockerClient({ socketPath, timeoutMs = 10000 }) {
+  const call = (p) => getJson(socketPath, p, timeoutMs);
   return {
     getJson: call,
     info: () => call("/info"),
