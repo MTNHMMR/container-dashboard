@@ -46,8 +46,24 @@ The GitHub Actions workflow publishes `ghcr.io/mtnhmmr/container-dashboard:lates
 on every push to `main`. In the Portainer stack, remove the `build: .` line and
 keep the `image:` line, then **Pull and redeploy**.
 
-The container mounts the Docker socket **read-only**. It only ever issues `GET`
-requests to the Docker API.
+### Docker socket access
+
+The container runs as **root** so it can read the root-owned Docker socket
+(`/var/run/docker.sock`). This is the same approach Portainer, dozzle, and
+similar tools take: it works on any host with no per-host user/group setup.
+
+The socket is mounted **read-only** (`:ro`). Note that a `:ro` bind does **not**
+make the Docker API read-only — the API is still fully writable through the
+socket. The real safety boundary here is that this app's Docker client is
+**GET-only by construction**: it only ever issues `GET` requests to the Docker
+API and has no code path that can create, start, stop, or exec a container.
+
+**Troubleshooting:** if `/api/status` shows "cannot reach Docker" or an `EACCES`
+error, it's a socket-permissions problem:
+
+- Confirm the host socket path is correct (`/var/run/docker.sock` on most hosts).
+- On SELinux / RHEL-family hosts (Fedora, CentOS, Rocky, Alma), add `:z` or `:Z`
+  to the socket volume, e.g. `-v /var/run/docker.sock:/var/run/docker.sock:ro,Z`.
 
 ## Tests
 
