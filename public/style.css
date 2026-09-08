@@ -80,6 +80,15 @@ tbody tr:last-child td { border-bottom: none; }
 .state-running { color: var(--ok); }
 .state-other { color: var(--dim); }
 
+td.image span {
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
 td.endpoints a { color: var(--accent); text-decoration: none; margin-right: 10px; }
 td.endpoints a:hover { text-decoration: underline; }
 

@@ -32,7 +32,7 @@ export function rowHtml(c) {
       <td>${esc(c.restartCount)}</td>
       <td>${fmtPct(c.cpuPct)}</td>
       <td>${c.memUsedBytes === null ? "—" : fmtBytes(c.memUsedBytes)}</td>
-      <td>${esc(c.image)}</td>
+      <td class="image"><span title="${esc(c.image)}">${esc(c.image)}</span></td>
       <td class="endpoints">${endpoints || "<span class=\"state-other\">—</span>"}</td>
     </tr>`;
 }
