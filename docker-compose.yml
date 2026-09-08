@@ -1,0 +1,15 @@
+services:
+  container-dashboard:
+    build: .
+    image: ghcr.io/mtnhmmr/container-dashboard:latest
+    container_name: container-dashboard
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      PORT: "9000"
+      DASHBOARD_HOST: "${DASHBOARD_HOST:-localhost}"
+      POLL_INTERVAL_MS: "30000"
+      DOCKER_SOCKET: "/var/run/docker.sock"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
