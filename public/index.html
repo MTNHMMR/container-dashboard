@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Container Dashboard</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="page-head">
+      <p class="eyebrow">Container Dashboard</p>
+      <h1 id="host-title">HomeLab Docker</h1>
+      <p id="host-sub" class="sub"></p>
+      <p id="freshness" class="badge badge-live">Live · refreshes every 30 s</p>
+    </header>
+
+    <section class="cards" id="host-cards" aria-label="Host summary"></section>
+
+    <section class="panel">
+      <h2 class="eyebrow">Containers</h2>
+      <div class="table-wrap">
+        <table id="container-table">
+          <thead>
+            <tr>
+              <th>Name</th><th>State</th><th>Health</th><th>Uptime</th>
+              <th>Restarts</th><th>CPU</th><th>Memory</th><th>Image</th><th>Endpoints</th>
+            </tr>
+          </thead>
+          <tbody id="container-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer id="foot" class="foot"></footer>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

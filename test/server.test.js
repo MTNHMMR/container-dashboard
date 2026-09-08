@@ -42,6 +42,15 @@ test("GET /api/health is ok regardless of Docker", async () => {
   }
 });
 
-// Note: the "GET / serves the dashboard HTML" test lives in Task 6, because it
-// depends on public/index.html, which Task 6 creates. Keep server.test.js to the
-// two API assertions here so this task commits with a fully-passing suite.
+test("GET / serves the dashboard HTML", async () => {
+  const { server, base } = await start({ getSnapshot: () => ({}) });
+  try {
+    const res = await fetch(`${base}/`);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-type"), /text\/html/);
+    const html = await res.text();
+    assert.match(html, /Container Dashboard/i);
+  } finally {
+    server.close();
+  }
+});
