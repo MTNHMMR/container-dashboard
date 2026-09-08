@@ -21,7 +21,8 @@ status" page) is explicitly **out of scope** and will be its own project.
 In:
 
 - Host cards: running/stopped container count, total CPU %, total memory used,
-  Docker disk usage, host/engine uptime
+  Docker disk usage, engine uptime (derived from the earliest `StartedAt` among
+  running containers when the API exposes no direct value)
 - Docker engine info panel: version, OS, arch, total containers/images, storage
   driver
 - Per-container rows: name, state, health, uptime, restart count, image,
