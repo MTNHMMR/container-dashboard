@@ -8,6 +8,9 @@ function parsePositiveInt(value, name) {
 
 // PORT also accepts 0, which asks the OS for an ephemeral port (used by integration tests).
 function parsePort(value) {
+  if (typeof value === "string" && value.trim() === "") {
+    throw new Error(`Invalid PORT: expected a non-negative integer, got ${JSON.stringify(value)}`);
+  }
   const n = Number(value);
   if (!Number.isInteger(n) || n < 0) {
     throw new Error(`Invalid PORT: expected a non-negative integer, got ${JSON.stringify(value)}`);

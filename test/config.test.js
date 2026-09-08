@@ -30,3 +30,31 @@ test("loadConfig throws on a non-numeric PORT", () => {
 test("loadConfig throws on a non-positive POLL_INTERVAL_MS", () => {
   assert.throws(() => loadConfig({ POLL_INTERVAL_MS: "0" }), /POLL_INTERVAL_MS/);
 });
+
+test("loadConfig accepts PORT '0' (OS-assigned ephemeral port)", () => {
+  assert.equal(loadConfig({ PORT: "0" }).port, 0);
+});
+
+test("loadConfig leaves PORT undefined at the documented 9000 default", () => {
+  assert.equal(loadConfig({}).port, 9000);
+});
+
+test("loadConfig throws on a negative PORT", () => {
+  assert.throws(() => loadConfig({ PORT: "-1" }), /PORT/);
+});
+
+test("loadConfig throws on a non-integer PORT", () => {
+  assert.throws(() => loadConfig({ PORT: "3.5" }), /PORT/);
+});
+
+test("loadConfig throws on an empty or whitespace-only PORT", () => {
+  assert.throws(() => loadConfig({ PORT: "" }), /PORT/);
+  assert.throws(() => loadConfig({ PORT: "   " }), /PORT/);
+});
+
+test("loadConfig pins the PORT error message wording", () => {
+  assert.throws(
+    () => loadConfig({ PORT: "-1" }),
+    /Invalid PORT: expected a non-negative integer, got "-1"/,
+  );
+});
