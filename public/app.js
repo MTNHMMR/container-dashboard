@@ -1,4 +1,5 @@
 import { fmtBytes, fmtDuration, fmtPct, fmtRelTime } from "/format.js";
+import { esc, isHttpUrl } from "/escape.js";
 
 const REFRESH_MS = 30_000;
 const $ = (id) => document.getElementById(id);
@@ -14,7 +15,7 @@ function card(k, v, note) {
 }
 
 function healthDot(health, state) {
-  if (state !== "running") return `<span class="dot dot-idle"></span>${state}`;
+  if (state !== "running") return `<span class="dot dot-idle"></span>${esc(state)}`;
   if (health === "healthy") return `<span class="dot dot-ok"></span>healthy`;
   if (health === "unhealthy") return `<span class="dot dot-bad"></span>unhealthy`;
   if (health === "starting") return `<span class="dot dot-warn"></span>starting`;
@@ -41,17 +42,22 @@ function renderRows(containers) {
   for (const c of containers || []) {
     const tr = document.createElement("tr");
     const endpoints = (c.endpoints || [])
-      .map((u) => `<a href="${u}" target="_blank" rel="noreferrer noopener">${u.replace(/^https?:\/\//, "")}</a>`)
+      .map((u) => {
+        const text = esc(String(u).replace(/^https?:\/\//, ""));
+        return isHttpUrl(u)
+          ? `<a href="${esc(u)}" target="_blank" rel="noreferrer noopener">${text}</a>`
+          : text;
+      })
       .join("");
     tr.innerHTML = `
-      <td>${c.name}</td>
-      <td class="${c.state === "running" ? "state-running" : "state-other"}">${c.state}</td>
+      <td>${esc(c.name)}</td>
+      <td class="${c.state === "running" ? "state-running" : "state-other"}">${esc(c.state)}</td>
       <td>${healthDot(c.health, c.state)}</td>
       <td>${fmtDuration(c.uptimeSecs)}</td>
       <td>${c.restartCount}</td>
       <td>${fmtPct(c.cpuPct)}</td>
       <td>${c.memUsedBytes === null ? "—" : fmtBytes(c.memUsedBytes)}</td>
-      <td>${c.image}</td>
+      <td>${esc(c.image)}</td>
       <td class="endpoints">${endpoints || "<span class=\"state-other\">—</span>"}</td>`;
     tbody.append(tr);
   }
